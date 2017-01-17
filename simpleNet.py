@@ -8,6 +8,7 @@ import matplotlib.lines as mlines
 
 '''
 Implements a simple neural network to recognize 24 mathematical symbols.
+Adapted from Google's tensorflow tutorial
 Architecture: Input layer -> hidden layer -> softmax layer (+ cross entropy loss for training)
 '''
 
