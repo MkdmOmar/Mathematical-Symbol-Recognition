@@ -180,26 +180,32 @@ def main():
     for i in range(nEpochs):
 
         # Generate a random permutation of trainX and trainY while maintaining their relative order
-        p = np.random.permutation(len(trainX))  # Generate a permutation of the numbers from 0 to len(trainX)
-        xData = trainX[p]  # Shuffle trainX using the indices p
-        yData = trainY[p]  # Shuffle trainY using the indices p
+        pTrain = np.random.permutation(len(trainX))  # Generate a permutation of the numbers from 0 to len(trainX)
+        xDataTrain = trainX[pTrain]  # Shuffle trainX using the indices pTrain
+        yDataTrain = trainY[pTrain]  # Shuffle trainY using the indices pTrain
+
+        # Generate a random permutation of testX and testY while maintaining their relative order
+        pTest = np.random.permutation(len(testX))  # Generate a permutation of the numbers from 0 to len(testX)
+        xDataTest = testX[pTest]  # Shuffle testX using the indices pTest
+        yDataTest = testY[pTest]  # Shuffle testY using the indices pTest
+
 
         # Iterate over the number of batches
         for m in range(0, numBatches):
 
-            currBatchX = xData[m * batchSize: m * batchSize + batchSize]  # Extract batch X data
-            currBatchY = yData[m * batchSize: m * batchSize + batchSize]  # Extract batch Y data
+            currBatchX = xDataTrain[m * batchSize: m * batchSize + batchSize]  # Extract batch X data
+            currBatchY = yDataTrain[m * batchSize: m * batchSize + batchSize]  # Extract batch Y data
 
             # Train the neural net for a single step using the current batch's X and Y data
             train_step.run(feed_dict={x: currBatchX, y_: currBatchY, keep_prob: 0.5})
 
         # Calculate training accuracy after each epoch
-        train_accuracy = accuracy.eval(feed_dict={x: trainX, y_: trainY, keep_prob: 1.0})  # Evaluate training accuracy
+        train_accuracy = accuracy.eval(feed_dict={x: xDataTrain, y_: yDataTrain, keep_prob: 1.0})  # Evaluate training accuracy
         print("Epoch %d, training accuracy %g" % (i, train_accuracy))
         trainAccuracies[i] = train_accuracy
 
         # Calculate testing accuracy after each epoch
-        test_accuracy = accuracy.eval(feed_dict={x: testX, y_: testY, keep_prob: 1.0})  # Evaluate testing accuracy
+        test_accuracy = accuracy.eval(feed_dict={x: xDataTest, y_: yDataTest, keep_prob: 1.0})  # Evaluate testing accuracy
         print("Epoch %d, testing accuracy %g" % (i, test_accuracy))
         testAccuracies[i] = test_accuracy
 
